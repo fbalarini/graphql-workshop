@@ -24,8 +24,8 @@ In this workshop, you will implement the backend for a blogging application:
 
 This workshop contains the following sections:
 
-1. [Setting up](setting_up.md)
-2. [Queries](queries.md)
-3. [Mutations](mutations.md)
-4. [Authentication](authentication.md)
-5. [Error handling](error_handling.md)
+1. [Setting up](workshop/setting_up.md)
+2. [Queries](workshop/queries.md)
+3. [Mutations](workshop/mutations.md)
+4. [Authentication](workshop/authentication.md)
+5. [Authorization](workshop/authorization.md)

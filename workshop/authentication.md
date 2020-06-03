@@ -124,6 +124,10 @@ The error might look like:
 }
 ```
 
+To try it out we're going to stop using GraphiQL because it doesn't have support to add new headers to the requests.
+
+Postman is a good option too, let's check it out in this [link](https://learning.postman.com/docs/postman/sending-api-requests/graphql/).
+
 ## Extra mile
 
 The way we built it, the authentication token is returned as part of the GraphQL response, in the `data` key. If we want to return the auth token as part of the response headers, can we? How would it be?

@@ -79,4 +79,4 @@ module Mutations
 end
 ```
 
-Try it out in GraphiQL!
+Try it out using Postman!
