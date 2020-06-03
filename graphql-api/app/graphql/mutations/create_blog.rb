@@ -6,6 +6,10 @@ module Mutations
 
     type Types::BlogType
 
+    def ready?(**_args)
+      context[:current_user].admin || raise(GraphQL::ExecutionError, "You can't create new blogs")
+    end
+
     def resolve(email:, title:, body:)
       user = User.find_by(email: email)
       return unless user
