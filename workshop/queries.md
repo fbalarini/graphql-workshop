@@ -5,7 +5,8 @@
 In this section, we'll start building our GraphQL API. First, we need a query to show all the available blogs.
 
 Run the following command:
-```
+
+```ruby
 rails g graphql:object BlogType id:ID! title:String! body:String!
 ```
 
@@ -16,7 +17,8 @@ Now, let's create our first query resolver to return the dummy blogs we've creat
 All GraphQL queries start from a root type called Query. When we ran `rails generate graphql:install`, it created the root query type in `app/graphql/types/query_type.rb`.
 
 Update its content:
-```
+
+```ruby
 module Types
   class QueryType < BaseObject
     field :all_blogs, [BlogType], null: false, description: 'Return all the blogs'
@@ -30,12 +32,6 @@ end
 ```
 
 To check it is working, we're going to use the playground provided by GraphQL by default called GraphiQL, an in-browser IDE.
-
-GraphiQL had already been added to your application when you executed `rails generate graphql:install`, but you have to tell the asset pipeline to precompile its assets. Add this at the end of `/app/assets/config/manifest.js`:
-```
-//= link graphiql/rails/application.css
-//= link graphiql/rails/application.js
-```
 
 Open your browser at http://localhost:3000/graphiql
 
