@@ -2,9 +2,9 @@
 
 ## Sign in
 
-First of all, as we do with blgos, let's create the `UserType`:
+First of all, as we do with blogs, let's create the `UserType`:
 
-```
+```ruby
 rails g graphql:object UserType id:ID! email:String! first_name:String! last_name:String!
 ```
 
@@ -14,10 +14,11 @@ Signing users in will be as simple as verifying the email and password and retur
 
 The steps to add this new mutation would be very similar to the ones we added before.
 
-First, create a resolver for the sign in mutation:
-```
+First, create a resolver for the sign in mutation `app/graphql/mutations/sign_in.rb`:
+
+```ruby
 module Mutations
-  class SignIn < BaseMutation
+  class SignIn < GraphQL::Schema::Mutation
     argument :email, String, required: true
     argument :password, String, required: true
 
@@ -37,7 +38,8 @@ end
 ```
 
 Let's expose it:
-```
+
+```ruby
 module Types
   class MutationType < BaseObject
     field :create_blog, mutation: Mutations::CreateBlog, description: 'Create new blog'
@@ -56,7 +58,7 @@ The best way to pass information down to the mutations is using the context obje
 
 We'll have to change the `app/controllers/graphql_controller.rb` and update the context:
 
-```
+```ruby
 class GraphqlController < ApplicationController
   def execute
     variables = ensure_hash(params[:variables])
@@ -70,6 +72,8 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  ...
 
   def context
     {
@@ -89,14 +93,15 @@ We're now ready to authenticate the query we built before.
 We need to handle the context inside the query in order to check the request being done is authenticated.
 
 Add the following to `app/graphql/types/query_type.rb`:
-```
+
+```ruby
 module Types
   class QueryType < BaseObject
     field :all_blogs, [BlogType], null: false, description: 'Return all the blogs'
 
     # This method is invoked, when `all_blogs` fields is being resolved
     def all_blogs
-      raise GraphQL::ExecutionError, 'Can't continue with this query' unless context[:current_user]
+      raise GraphQL::ExecutionError, "Can't continue with this query" unless context[:current_user]
 
       Blog.all
     end
@@ -107,18 +112,21 @@ end
 When a `GraphQL::ExecutionError` is raised, GraphQL-Ruby rescues it. Its message will be added to the `errors` key and GraphQL-Ruby will automatically add the line, column and path to it.
 
 The error might look like:
-```
+
+```ruby
 {
   "errors" => [
     {
       "message" => "Can't continue with this query",
       "locations" => [
         {
-          "line" => X,
-          "column" => Y,
+          "line" => 2,
+          "column" => 3,
         }
       ],
-      "path" => ["user", "sigIn"],
+      "path" => [
+        "allBlogs"
+      ],
     }
   ]
 }
@@ -126,7 +134,20 @@ The error might look like:
 
 To try it out we're going to stop using GraphiQL because it doesn't have support to add new headers to the requests.
 
-Postman is a good option too, let's check it out in this [link](https://learning.postman.com/docs/postman/sending-api-requests/graphql/).
+Postman is a good option too, let's check it out in this [link](https://learning.postman.com/docs/postman/sending-api-requests/graphql/). Take into consideration that you need to add the following in `app/controllers/graphql_controller.rb`:
+
+```ruby
+class GraphqlController < ApplicationController
+  skip_before_action :verify_authenticity_token, raise: false
+
+  def execute
+    ...
+  end
+
+  ...
+end
+
+```
 
 ## Extra mile
 
