@@ -19,7 +19,6 @@ In this workshop, you will implement the backend for a blogging application:
 * Show a list of blogs
 * Authentication system
 * Users can create blogs
-* Users can review blogs
 
 ## Sections
 
